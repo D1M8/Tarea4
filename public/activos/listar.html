@@ -1,1 +1,108 @@
 //tiene que haber un formulario
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Activos - Logística</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Listado de Activos</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Categoría</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Precio</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody id="tablaActivos">
+                <!-- Los datos se llenarán dinámicamente con JavaScript -->
+            </tbody>
+        </table>
+        <a href="index.html" class="back-link">← Volver al menú</a>
+    </div>
+
+    <script>
+        async function cargarActivos() {
+            try {
+                const response = await fetch('/api/activos');
+                if (response.ok) {
+                    const activos = await response.json();
+                    const tbody = document.getElementById('tablaActivos');
+                    tbody.innerHTML = '';
+
+                    activos.forEach(activo => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${activo.id}</td>
+                            <td>${activo.idcategoria}</td>
+                            <td>${activo.descripcion}</td>
+                            <td>${activo.estado}</td>
+                            <td>$${activo.precio}</td>
+                            <td>${new Date(activo.fecharegistro).toLocaleDateString()}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    console.error('Error al cargar los activos');
+                }
+            } catch (error) {
+                console.error('Error de red:', error);
+            }
+        }
+
+        cargarActivos();
+    </script>
+
+</body>
+</html>
